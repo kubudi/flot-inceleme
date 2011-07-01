@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+ <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Flot Pie Examples</title>
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+    <script language="javascript" type="text/javascript" src="jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="jquery.flot.js"></script>
+
+    <script language="javascript" type="text/javascript" src="jquery.flot.pie.js"></script>
+	
+<script type="text/javascript">
+$(function () {
+
+	var data = [];
+	var d1= [];
+	var d2=[];
+	var a;
+	var b=0;
+	var series = Math.floor(Math.random()*10)+1;
+	for( var i = 0; i<series; i++)
+	{
+	   a=Math.floor(Math.random()*100)+1;
+		data[i] = { label: "Series"+(i+1), data: a }
+		d1.push([a]);
+		b=b+a;
+		//var v = $("#cikti").val();
+		//$("#cikti").val(v+" "+a);
+	}
+	for( var i = 0; i<series; i++)
+	{
+	d2.push([i,d1[i]*100/b]);
+	//alert(d1[i*100/b);
+	}
+
+	// INTERACTIVE
+    $.plot($("#interactive"), data, 
+	{
+		series: {
+			pie: { 
+				show: true
+			}
+		},
+		grid: {
+			hoverable: true,
+			clickable: true
+		}
+	});
+	$("#interactive").bind("plothover", pieHover);
+	$("#interactive").bind("plotclick", pieClick);
+
+    
+    var data2 = [{ data: d2, label: "yüzde", color: "#333" }];
+
+    // setup background areas
+    var markings = [
+        { color: '#f6f6f6', yaxis: { from: 100 } },
+        { color: '#f6f6f6', yaxis: { to:  0} },
+        { color: '#000', lineWidth: 1, xaxis: { from: 2, to: 2 } },
+        { color: '#000', lineWidth: 1, xaxis: { from: 8, to: 8 } }
+    ];
+    
+    var placeholder = $("#placeholder");
+    
+    // plot it
+    var plot = $.plot(placeholder, data2, {
+        bars: { show: true, barWidth: 0.5, fill: 0.9 },
+
+		yaxis: { min: 0, max: 100 },
+		xaxis: { ticks: [], autoscaleMargin: 0.02 }
+    });
+
+   var ctx;
+    ctx.beginPath();
+    o.left += 4;
+    ctx.moveTo(o.left, o.top);
+    ctx.lineTo(o.left, o.top - 10);
+    ctx.lineTo(o.left + 10, o.top - 5);
+    ctx.lineTo(o.left, o.top);
+    ctx.fillStyle = "#000";
+    ctx.fill();
+
+});
+
+function pieHover(event, pos, obj) 
+{
+	if (!obj)
+                return;
+	percent = parseFloat(obj.series.percent).toFixed(2);
+	$("#hover").html('<span style="font-weight: bold; color: '+obj.series.color+'">'+obj.series.label+' ('+percent+'%)</span>');
+}
+
+function pieClick(event, pos, obj) 
+{
+	if (!obj)
+                return;
+	percent = parseFloat(obj.series.percent).toFixed(2);
+	//alert(''+obj.series.label+': '+percent+'%');
+	$("#cikti").val(percent);
+	}
+</script>
+	<style type="text/css">
+		* {
+		  font-family: sans-serif;
+		}
+		
+		body
+		{
+			padding: 0 1em 1em 1em;
+		}
+		
+		div.graph
+		{
+			width: 400px;
+			height: 300px;
+			float: left;
+			border: 1px dashed gainsboro;
+		}
+		
+		label
+		{
+			display: block;
+			margin-left: 400px;
+			padding-left: 1em;
+		}
+		
+		h2
+		{
+			padding-top: 1em;
+			margin-bottom: 0;
+			clear: both;
+			color: #ccc;
+		}
+		
+		code
+		{
+			display: block;
+			background-color: #eee;
+			border: 1px dashed #999;
+			padding: 0.5em;
+			margin: 0.5em;
+			color: #666;
+			font-size: 10pt;
+		}
+		
+		code b
+		{
+			color: black;
+		}
+		
+		ul
+		{
+			font-size: 10pt;
+		}
+		
+		ul li
+		{
+			margin-bottom: 0.5em;
+		}
+		
+		ul.options li
+		{
+			list-style: none;
+			margin-bottom: 1em;
+		}
+		
+		ul li i
+		{
+			color: #999;
+		}
+	</style>
+ </head>   
+   <div id="interactive" class="graph"></div>
+   <input id="cikti" type="text" value="" style="text-align: right; width:3em " /> 
+   <br/>   
+   <br/>
+   <div id="placeholder" class="graph"></div>	
+ </body>
+
+</html>
+
